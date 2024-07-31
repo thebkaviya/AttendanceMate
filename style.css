@@ -1,0 +1,88 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+header {
+    background-color: var(--header-background-color);
+    color: var(--header-text-color);
+    padding: 10px;
+    text-align: center;
+}
+
+nav a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: var(--link-color);
+}
+
+main {
+    padding: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 10px;
+}
+
+input[type="text"], input[type="date"] {
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px;
+    background-color: var(--button-background-color);
+    color: var(--button-text-color);
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: var(--button-hover-background-color);
+}
+
+.hidden {
+    display: none;
+}
+
+#popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--popup-background-color);
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+:root {
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --header-background-color: #333333;
+    --header-text-color: #ffffff;
+    --link-color: #007bff;
+    --button-background-color: #007bff;
+    --button-text-color: #ffffff;
+    --button-hover-background-color: #0056b3;
+    --popup-background-color: #f1f1f1;
+}
+
+body.dark-mode {
+    --background-color: #181818;
+    --text-color: #ffffff;
+    --header-background-color: #222222;
+    --header-text-color: #ffffff;
+    --link-color: #80d0ff;
+    --button-background-color: #80d0ff;
+    --button-text-color: #000000;
+    --button-hover-background-color: #58b3e4;
+    --popup-background-color: #333333;
+}
