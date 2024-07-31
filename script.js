@@ -1,16 +1,27 @@
 document.addEventListener("DOMContentLoaded", function() {
+    // Check if user is logged in
+    if (window.location.pathname !== '/login.html' && !localStorage.getItem('isLoggedIn')) {
+        window.location.href = 'login.html';
+    }
+
+    // Theme and settings
     const themeToggle = document.getElementById('theme-toggle');
     const attendancePercentage = document.getElementById('attendance-percentage');
     const percentageDisplay = document.getElementById('percentage-display');
 
-    themeToggle.addEventListener('change', function() {
-        document.body.classList.toggle('dark-mode', themeToggle.checked);
-    });
+    if (themeToggle) {
+        themeToggle.addEventListener('change', function() {
+            document.body.classList.toggle('dark-mode', themeToggle.checked);
+        });
+    }
 
-    attendancePercentage.addEventListener('input', function() {
-        percentageDisplay.textContent = attendancePercentage.value + '%';
-    });
+    if (attendancePercentage) {
+        attendancePercentage.addEventListener('input', function() {
+            percentageDisplay.textContent = attendancePercentage.value + '%';
+        });
+    }
 
+    // Data Entry Form
     const dataEntryForm = document.getElementById('data-entry-form');
     if (dataEntryForm) {
         dataEntryForm.addEventListener('submit', function(event) {
@@ -28,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // Calendar View
     const calendar = document.getElementById('calendar');
     if (calendar) {
         let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || {};
@@ -67,12 +79,13 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    // Statistics
     if (document.getElementById('statistics')) {
         let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || {};
         const totalDays = Object.keys(attendanceData).length;
         const presentDays = Object.values(attendanceData).filter(record => record.status === 'present').length;
         const absentDays = totalDays - presentDays;
-        const requiredPercentage = attendancePercentage.value / 100;
+        const requiredPercentage = attendancePercentage ? attendancePercentage.value / 100 : 0.75;
         const requiredDays = Math.ceil(totalDays * requiredPercentage);
 
         document.getElementById('statistics').innerHTML = `
@@ -82,6 +95,40 @@ document.addEventListener("DOMContentLoaded", function() {
             <p>Required Attendance Percentage: ${requiredPercentage * 100}%</p>
             <p>Additional Days Needed: ${Math.max(0, requiredDays - presentDays)}</p>
         `;
+    }
+
+    // Login and Registration
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const storedUsername = localStorage.getItem('username');
+            const storedPassword = localStorage.getItem('password');
+
+            if (username === storedUsername && password === storedPassword) {
+                localStorage.setItem('isLoggedIn', 'true');
+                window.location.href = 'index.html';
+            } else {
+                alert('Invalid credentials');
+            }
+        });
+    }
+
+    const registerForm = document.getElementById('register-form');
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const newUsername = document.getElementById('new-username').value;
+            const newPassword = document.getElementById('new-password').value;
+
+            localStorage.setItem('username', newUsername);
+            localStorage.setItem('password', newPassword);
+            alert('User registered successfully');
+            registerForm.reset();
+        });
     }
 });
 
