@@ -97,6 +97,35 @@ document.addEventListener("DOMContentLoaded", function() {
         `;
     }
 
+    // Predictor
+    const predictorForm = document.getElementById('predictor-form');
+    if (predictorForm) {
+        predictorForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const absentDays = parseInt(document.getElementById('absent-days').value);
+
+            let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || {};
+            const totalDays = Object.keys(attendanceData).length;
+            const presentDays = Object.values(attendanceData).filter(record => record.status === 'present').length;
+            const predictedTotalDays = totalDays + 5; // Adding 5 school days for the next week
+            const predictedAbsentDays = absentDays + (totalDays - presentDays);
+            const predictedPresentDays = predictedTotalDays - predictedAbsentDays;
+            const predictedAttendancePercentage = (predictedPresentDays / predictedTotalDays) * 100;
+
+            const predictionResult = document.getElementById('prediction-result');
+            const predictionDetails = document.getElementById('prediction-details');
+
+            predictionDetails.innerHTML = `
+                <p>Predicted Total School Days: ${predictedTotalDays}</p>
+                <p>Predicted Present Days: ${predictedPresentDays}</p>
+                <p>Predicted Absent Days: ${predictedAbsentDays}</p>
+                <p>Predicted Attendance Percentage: ${predictedAttendancePercentage.toFixed(2)}%</p>
+            `;
+
+            predictionResult.classList.remove('hidden');
+        });
+    }
+
     // Login and Registration
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
