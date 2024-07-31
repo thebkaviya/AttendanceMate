@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // Check if user is logged in
-    if (window.location.pathname !== '/login.html' && !localStorage.getItem('isLoggedIn')) {
+    // Redirect to login if not logged in and not on the login page
+    if (!localStorage.getItem('isLoggedIn') && window.location.pathname !== '/login.html') {
         window.location.href = 'login.html';
     }
 
@@ -128,6 +128,15 @@ document.addEventListener("DOMContentLoaded", function() {
             localStorage.setItem('password', newPassword);
             alert('User registered successfully');
             registerForm.reset();
+        });
+    }
+
+    // Logout functionality
+    const logout = document.getElementById('logout');
+    if (logout) {
+        logout.addEventListener('click', function() {
+            localStorage.removeItem('isLoggedIn');
+            window.location.href = 'login.html';
         });
     }
 });
