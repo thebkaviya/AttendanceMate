@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const dayElement = document.createElement('div');
             dayElement.classList.add('calendar-day');
             dayElement.textContent = day;
-            dayElement.style.backgroundColor = status === 'present' ? 'green' : status === 'absent' ? 'red' : 'gray';
+            dayElement.style.backgroundColor = status === 'present' ? 'green' : status === 'absent' ? 'red' : status === 'holiday' ? 'blue' : 'gray';
 
             dayElement.addEventListener('click', function() {
                 const popup = document.getElementById('popup');
@@ -82,9 +82,9 @@ document.addEventListener("DOMContentLoaded", function() {
     // Statistics
     if (document.getElementById('statistics')) {
         let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || {};
-        const totalDays = Object.keys(attendanceData).length;
+        const totalDays = Object.keys(attendanceData).filter(date => attendanceData[date].status !== 'holiday').length;
         const presentDays = Object.values(attendanceData).filter(record => record.status === 'present').length;
-        const absentDays = totalDays - presentDays;
+        const absentDays = Object.keys(attendanceData).filter(date => attendanceData[date].status !== 'holiday').length - presentDays;
         const requiredPercentage = attendancePercentage ? attendancePercentage.value / 100 : 0.75;
         const requiredDays = Math.ceil(totalDays * requiredPercentage);
 
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const absentDays = parseInt(document.getElementById('absent-days').value);
 
             let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || {};
-            const totalDays = Object.keys(attendanceData).length;
+            const totalDays = Object.keys(attendanceData).filter(date => attendanceData[date].status !== 'holiday').length;
             const presentDays = Object.values(attendanceData).filter(record => record.status === 'present').length;
             const predictedTotalDays = totalDays + 5; // Adding 5 school days for the next week
             const predictedAbsentDays = absentDays + (totalDays - presentDays);
