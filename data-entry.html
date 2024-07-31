@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Entry</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Data Entry</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="calendar-view.html">Calendar View</a>
+            <a href="statistics.html">Statistics</a>
+            <a href="settings.html">Settings</a>
+        </nav>
+    </header>
+    <main>
+        <form id="data-entry-form">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+            <label>
+                <input type="radio" name="status" value="present" required> Present
+            </label>
+            <label>
+                <input type="radio" name="status" value="absent" required> Absent
+            </label>
+            <label for="reason">Reason (if absent):</label>
+            <input type="text" id="reason" name="reason">
+            <button type="submit">Submit</button>
+        </form>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
