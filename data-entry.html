@@ -11,23 +11,32 @@
         <h1>Data Entry</h1>
         <nav>
             <a href="index.html">Home</a>
+            <a href="data-entry.html">Data Entry</a>
             <a href="calendar-view.html">Calendar View</a>
             <a href="statistics.html">Statistics</a>
             <a href="settings.html">Settings</a>
+            <a href="predictor.html">Predictor</a>
+            <a href="#" id="logout">Logout</a>
         </nav>
     </header>
     <main>
         <form id="data-entry-form">
             <label for="date">Date:</label>
             <input type="date" id="date" name="date" required>
-            <label>
-                <input type="radio" name="status" value="present" required> Present
-            </label>
-            <label>
-                <input type="radio" name="status" value="absent" required> Absent
-            </label>
+
+            <fieldset>
+                <legend>Status:</legend>
+                <input type="radio" id="present" name="status" value="present" required>
+                <label for="present">Present</label>
+                <input type="radio" id="absent" name="status" value="absent" required>
+                <label for="absent">Absent</label>
+                <input type="radio" id="holiday" name="status" value="holiday" required>
+                <label for="holiday">Holiday</label>
+            </fieldset>
+
             <label for="reason">Reason (if absent):</label>
             <input type="text" id="reason" name="reason">
+
             <button type="submit">Submit</button>
         </form>
     </main>
