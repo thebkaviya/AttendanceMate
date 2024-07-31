@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar View</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Calendar View</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="data-entry.html">Data Entry</a>
+            <a href="statistics.html">Statistics</a>
+            <a href="settings.html">Settings</a>
+        </nav>
+    </header>
+    <main>
+        <div id="calendar"></div>
+        <div id="popup" class="hidden">
+            <p id="popup-date"></p>
+            <p id="popup-status"></p>
+            <p id="popup-reason"></p>
+            <button onclick="closePopup()">Close</button>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
