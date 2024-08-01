@@ -41,42 +41,78 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Calendar View
     const calendar = document.getElementById('calendar');
+    const calendarHeader = document.getElementById('current-month-year');
+    const prevMonthBtn = document.getElementById('prev-month');
+    const nextMonthBtn = document.getElementById('next-month');
+    
     if (calendar) {
         let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || {};
+        let today = new Date();
+        let currentMonth = today.getMonth();
+        let currentYear = today.getFullYear();
 
-        const today = new Date();
-        const month = today.getMonth();
-        const year = today.getFullYear();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        function renderCalendar(month, year) {
+            calendar.innerHTML = ''; // Clear the calendar
+            calendarHeader.textContent = `${new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date(year, month))} ${year}`;
 
-        for (let day = 1; day <= daysInMonth; day++) {
-            const date = new Date(year, month, day);
-            const dayOfWeek = date.getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            let startDay = new Date(year, month, 1).getDay();
 
-            if (dayOfWeek === 0 || dayOfWeek === 6) continue;
+            // Adjust startDay to align with grid, assuming week starts from Sunday
+            startDay = (startDay === 0) ? 6 : startDay - 1;
 
-            const dateString = date.toISOString().split('T')[0];
-            const status = attendanceData[dateString] ? attendanceData[dateString].status : 'unknown';
+            for (let i = 0; i < startDay; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.classList.add('calendar-day');
+                calendar.appendChild(emptyCell);
+            }
 
-            const dayElement = document.createElement('div');
-            dayElement.classList.add('calendar-day');
-            dayElement.textContent = day;
-            dayElement.style.backgroundColor = status === 'present' ? 'green' : status === 'absent' ? 'red' : status === 'holiday' ? 'blue' : 'gray';
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const dateString = date.toISOString().split('T')[0];
+                const status = attendanceData[dateString] ? attendanceData[dateString].status : 'unknown';
 
-            dayElement.addEventListener('click', function() {
-                const popup = document.getElementById('popup');
-                const popupDate = document.getElementById('popup-date');
-                const popupStatus = document.getElementById('popup-status');
-                const popupReason = document.getElementById('popup-reason');
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('calendar-day');
+                dayElement.textContent = day;
+                dayElement.style.backgroundColor = status === 'present' ? 'green' : status === 'absent' ? 'red' : status === 'holiday' ? 'blue' : 'gray';
 
-                popupDate.textContent = `Date: ${dateString}`;
-                popupStatus.textContent = `Status: ${status}`;
-                popupReason.textContent = `Reason: ${attendanceData[dateString]?.reason || 'N/A'}`;
-                popup.classList.remove('hidden');
-            });
+                dayElement.addEventListener('click', function() {
+                    const popup = document.getElementById('popup');
+                    const popupDate = document.getElementById('popup-date');
+                    const popupStatus = document.getElementById('popup-status');
+                    const popupReason = document.getElementById('popup-reason');
 
-            calendar.appendChild(dayElement);
+                    popupDate.textContent = `Date: ${dateString}`;
+                    popupStatus.textContent = `Status: ${status}`;
+                    popupReason.textContent = `Reason: ${attendanceData[dateString]?.reason || 'N/A'}`;
+                    popup.classList.remove('hidden');
+                    popup.style.display = 'flex';
+                });
+
+                calendar.appendChild(dayElement);
+            }
         }
+
+        renderCalendar(currentMonth, currentYear);
+
+        prevMonthBtn.addEventListener('click', function() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar(currentMonth, currentYear);
+        });
+
+        nextMonthBtn.addEventListener('click', function() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar(currentMonth, currentYear);
+        });
     }
 
     // Statistics
@@ -93,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <p>Present Days: ${presentDays}</p>
             <p>Absent Days: ${absentDays}</p>
             <p>Required Attendance Percentage: ${requiredPercentage * 100}%</p>
-            <p>Additional Days Needed: ${Math.max(0, requiredDays - presentDays)}</p>
+            <p>Additional Days Needed to Reach ${requiredPercentage * 100}%: ${Math.max(0, requiredDays - presentDays)}</p>
         `;
     }
 
@@ -102,68 +138,28 @@ document.addEventListener("DOMContentLoaded", function() {
     if (predictorForm) {
         predictorForm.addEventListener('submit', function(event) {
             event.preventDefault();
-            const absentDays = parseInt(document.getElementById('absent-days').value);
-
+            const futureAbsences = parseInt(document.getElementById('future-absences').value);
             let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || {};
             const totalDays = Object.keys(attendanceData).filter(date => attendanceData[date].status !== 'holiday').length;
             const presentDays = Object.values(attendanceData).filter(record => record.status === 'present').length;
-            const predictedTotalDays = totalDays + 5; // Adding 5 school days for the next week
-            const predictedAbsentDays = absentDays + (totalDays - presentDays);
-            const predictedPresentDays = predictedTotalDays - predictedAbsentDays;
-            const predictedAttendancePercentage = (predictedPresentDays / predictedTotalDays) * 100;
+            const newTotalDays = totalDays + 5;
+            const newAbsentDays = Object.keys(attendanceData).filter(date => attendanceData[date].status !== 'holiday').length - presentDays + futureAbsences;
+            const newPresentDays = newTotalDays - newAbsentDays;
+            const newPercentage = (newPresentDays / newTotalDays) * 100;
 
-            const predictionResult = document.getElementById('prediction-result');
-            const predictionDetails = document.getElementById('prediction-details');
-
-            predictionDetails.innerHTML = `
-                <p>Predicted Total School Days: ${predictedTotalDays}</p>
-                <p>Predicted Present Days: ${predictedPresentDays}</p>
-                <p>Predicted Absent Days: ${predictedAbsentDays}</p>
-                <p>Predicted Attendance Percentage: ${predictedAttendancePercentage.toFixed(2)}%</p>
+            document.getElementById('predictor-result').innerHTML = `
+                <p>Predicted Total School Days: ${newTotalDays}</p>
+                <p>Predicted Present Days: ${newPresentDays}</p>
+                <p>Predicted Absent Days: ${newAbsentDays}</p>
+                <p>Predicted Attendance Percentage: ${newPercentage.toFixed(2)}%</p>
             `;
-
-            predictionResult.classList.remove('hidden');
         });
     }
 
-    // Login and Registration
-    const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            const storedUsername = localStorage.getItem('username');
-            const storedPassword = localStorage.getItem('password');
-
-            if (username === storedUsername && password === storedPassword) {
-                localStorage.setItem('isLoggedIn', 'true');
-                window.location.href = 'index.html';
-            } else {
-                alert('Invalid credentials');
-            }
-        });
-    }
-
-    const registerForm = document.getElementById('register-form');
-    if (registerForm) {
-        registerForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const newUsername = document.getElementById('new-username').value;
-            const newPassword = document.getElementById('new-password').value;
-
-            localStorage.setItem('username', newUsername);
-            localStorage.setItem('password', newPassword);
-            alert('User registered successfully');
-            registerForm.reset();
-        });
-    }
-
-    // Logout functionality
-    const logout = document.getElementById('logout');
-    if (logout) {
-        logout.addEventListener('click', function() {
+    // Logout
+    const logoutBtn = document.getElementById('logout');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
             localStorage.removeItem('isLoggedIn');
             window.location.href = 'login.html';
         });
@@ -171,5 +167,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function closePopup() {
-    document.getElementById('popup').classList.add('hidden');
+    const popup = document.getElementById('popup');
+    popup.classList.add('hidden');
+    popup.style.display = 'none';
 }
