@@ -19,14 +19,17 @@
             <a href="#" id="logout">Logout</a>
         </nav>
     </header>
+
     <main>
-        <label for="theme-toggle">Dark Mode:</label>
-        <input type="checkbox" id="theme-toggle" name="theme-toggle">
-        
-        <label for="attendance-percentage">Required Attendance Percentage:</label>
-        <input type="range" id="attendance-percentage" name="attendance-percentage" min="0" max="100">
-        <span id="percentage-display">75%</span>
+        <form id="settings-form">
+            <label for="required-attendance">
+                Required Attendance Percentage:
+                <input type="range" id="required-attendance" min="0.5" max="1" step="0.01" value="0.75">
+            </label>
+            <span id="required-attendance-value">75%</span>
+        </form>
     </main>
+
     <script src="script.js"></script>
 </body>
 </html>

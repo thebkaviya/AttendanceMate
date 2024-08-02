@@ -1,6 +1,6 @@
 /* General Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
@@ -131,6 +131,7 @@ button:hover {
     justify-content: center;
     align-items: center;
     border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
 .calendar-day:hover {
@@ -185,50 +186,51 @@ button:hover {
     font-size: 1.2em;
 }
 
-/* Statistics and Predictor */
-#statistics p, #predictor-result p {
-    margin: 10px 0;
-    font-size: 1.1em;
+/* Settings Form */
+#settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
+label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+input[type="range"] {
+    width: 70%;
+}
+
+#required-attendance-value {
+    font-size: 1.2em;
+    margin-left: 10px;
+}
+
+/* Predictor Form */
 #predictor-form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
 }
 
-#predictor-form input[type="number"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+#predictor-result p {
+    margin: 5px 0;
 }
 
-#predictor-form button {
+/* Buttons */
+button {
     padding: 10px 20px;
     background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-#predictor-form button:hover {
+button:hover {
     background-color: #45a049;
-}
-
-/* Settings */
-#settings-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-#settings-form label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#settings-form input[type="range"] {
-    width: 100%;
 }
