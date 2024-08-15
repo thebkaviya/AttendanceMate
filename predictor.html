@@ -3,33 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance Predictor</title>
+    <title>Predictor</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Attendance Predictor</h1>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="data-entry.html">Data Entry</a>
-            <a href="calendar-view.html">Calendar View</a>
-            <a href="statistics.html">Statistics</a>
-            <a href="settings.html">Settings</a>
-            <a href="predictor.html">Predictor</a>
-            <a href="#" id="logout">Logout</a>
-        </nav>
-    </header>
-    <main>
+    <div class="container">
+        <h1>Predictor</h1>
         <form id="predictor-form">
-            <label for="absent-days">Number of days absent next week:</label>
-            <input type="number" id="absent-days" name="absent-days" min="0" max="5" required>
+            <label for="days-absent-next-week">Number of days you plan to be absent next week:</label>
+            <input type="number" id="days-absent-next-week" min="0" max="5" value="0">
             <button type="submit">Predict</button>
         </form>
-        <div id="prediction-result" class="hidden">
-            <h2>Prediction Result</h2>
-            <p id="prediction-details"></p>
-        </div>
-    </main>
+        <div id="predictor-result"></div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

@@ -1,47 +1,48 @@
-/* General Styles */
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f5f5f5;
     color: #333;
 }
 
-header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 0;
-    text-align: center;
-}
-
-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-}
-
-nav a, #logout {
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-#logout {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-}
-
-/* Main Layout */
-main {
-    width: 80%;
+.container {
+    max-width: 800px;
     margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
 }
 
-/* Data Entry Form */
+h1 {
+    text-align: center;
+    color: #4CAF50;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #4CAF50;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #388E3C;
+}
+
 form {
     display: flex;
     flex-direction: column;
@@ -52,181 +53,102 @@ label {
     font-weight: bold;
 }
 
-input[type="date"], input[type="text"] {
+input[type="date"],
+input[type="number"],
+textarea {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-fieldset {
-    border: none;
-    padding: 0;
-}
-
-legend {
-    font-weight: bold;
-}
-
-input[type="radio"] {
-    margin-right: 5px;
-}
-
-button[type="submit"] {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button[type="submit"]:hover {
-    background-color: #45a049;
-}
-
-/* Calendar View */
-#calendar-container {
-    width: 100%;
-    margin: 20px auto;
-}
-
-#calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#current-month-year {
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
 button {
-    padding: 5px 10px;
+    padding: 10px;
     background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 button:hover {
     background-color: #45a049;
 }
 
-#calendar {
+/* Calendar */
+.calendar {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(4, 1fr);
     gap: 5px;
-    margin-top: 20px;
 }
 
 .calendar-day {
-    padding: 20px;
-    border: 1px solid #ddd;
-    text-align: center;
-    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 10px;
+    background-color: #e0e0e0;
     border-radius: 5px;
+    cursor: pointer;
     transition: background-color 0.3s;
 }
 
-.calendar-day:hover {
-    background-color: #f0f0f0;
-}
-
-/* Status Colors */
 .calendar-day[data-status="present"] {
-    background-color: green;
-    color: white;
+    background-color: #a5d6a7;
 }
 
 .calendar-day[data-status="absent"] {
-    background-color: red;
-    color: white;
-}
-
-.calendar-day[data-status="holiday"] {
-    background-color: blue;
-    color: white;
+    background-color: #ef9a9a;
 }
 
 .calendar-day[data-status="unknown"] {
-    background-color: gray;
-    color: white;
+    background-color: #eeeeee;
+}
+
+.calendar-day:hover {
+    background-color: #ccc;
+}
+
+/* Statistics Page */
+#statistics p {
+    font-size: 18px;
+    color: #333;
 }
 
 /* Popup */
 #popup {
-    display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: none;
+    flex-direction: column;
     align-items: center;
+    gap: 10px;
+    max-width: 90%;
+    width: 400px;
+    box-sizing: border-box;
 }
 
-#popup-content {
-    background: white;
-    padding: 20px;
-    border-radius: 5px;
-    width: 300px;
+#popup h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+#popup p {
+    font-size: 16px;
+    color: #555;
     text-align: center;
 }
 
 #popup-close {
-    float: right;
-    cursor: pointer;
-    font-size: 1.2em;
-}
-
-/* Settings Form */
-#settings-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-}
-
-label {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size: 1.2em;
-    width: 100%;
-}
-
-input[type="range"] {
-    width: 80%;
     margin-top: 10px;
-}
-
-#required-attendance-value {
-    font-size: 1.5em;
-    margin-left: 10px;
-}
-
-/* Predictor Form */
-#predictor-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-#predictor-result p {
-    margin: 5px 0;
-}
-
-/* Buttons */
-button {
-    padding: 10px 20px;
+    padding: 10px;
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -235,6 +157,26 @@ button {
     transition: background-color 0.3s;
 }
 
-button:hover {
+#popup-close:hover {
     background-color: #45a049;
+}
+
+/* Slider */
+.slider-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.slider {
+    width: 100%;
+    max-width: 400px;
+}
+
+.slider-value {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
 }

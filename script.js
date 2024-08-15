@@ -1,8 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Helper functions to interact with local storage
     const getAttendanceData = () => JSON.parse(localStorage.getItem('attendanceData')) || {};
     const saveAttendanceData = (data) => localStorage.setItem('attendanceData', JSON.stringify(data));
-    const getRequiredAttendance = () => localStorage.getItem('requiredAttendance') || 75;
+    const getRequiredAttendance = () => parseFloat(localStorage.getItem('requiredAttendance')) || 75;
     const setRequiredAttendance = (percentage) => localStorage.setItem('requiredAttendance', percentage);
+    const getInitialData = () => JSON.parse(localStorage.getItem('initialData')) || { totalSchoolDays: 0, presentDays: 0 };
+    const setInitialData = (data) => localStorage.setItem('initialData', JSON.stringify(data));
 
     // Data Entry Page
     const dataEntryForm = document.getElementById('data-entry-form');
@@ -42,23 +45,34 @@ document.addEventListener("DOMContentLoaded", function () {
             for (let day = 1; day <= daysInMonth; day++) {
                 const date = new Date(year, month, day).toISOString().split('T')[0];
                 const dayData = attendanceData[date] || { status: 'unknown', reason: '' };
-                calendarContainer.innerHTML += `
-                    <div class="calendar-day" data-status="${dayData.status}" data-date="${date}">
-                        ${day}
-                    </div>
-                `;
-            }
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('calendar-day');
+                dayElement.textContent = day;
+                dayElement.dataset.status = dayData.status;
 
-            document.querySelectorAll('.calendar-day[data-date]').forEach(dayElem => {
-                dayElem.addEventListener('click', function () {
-                    const date = this.getAttribute('data-date');
-                    const dayData = attendanceData[date] || { status: 'unknown', reason: '' };
-                    alert(`Date: ${date}\nStatus: ${dayData.status}\nReason: ${dayData.reason}`);
+                dayElement.addEventListener('click', () => {
+                    const popup = document.getElementById('popup');
+                    if (popup) {
+                        document.getElementById('popup-date').textContent = date;
+                        document.getElementById('popup-status').textContent = dayData.status;
+                        document.getElementById('popup-reason').textContent = dayData.reason;
+                        popup.style.display = 'flex';
+                    }
                 });
-            });
+
+                calendarContainer.appendChild(dayElement);
+            }
         };
 
         renderCalendar();
+    }
+
+    // Popup for Calendar Details
+    const popupCloseButton = document.getElementById('popup-close');
+    if (popupCloseButton) {
+        popupCloseButton.addEventListener('click', () => {
+            document.getElementById('popup').style.display = 'none';
+        });
     }
 
     // Statistics Page
@@ -66,21 +80,31 @@ document.addEventListener("DOMContentLoaded", function () {
     if (statisticsContainer) {
         const renderStatistics = () => {
             const attendanceData = getAttendanceData();
-            const totalSchoolDays = Object.keys(attendanceData).filter(date => {
-                const dayOfWeek = new Date(date).getDay();
-                return dayOfWeek >= 1 && dayOfWeek <= 5; // Monday to Friday
-            }).length;
-            const presentDays = Object.values(attendanceData).filter(data => data.status === 'present').length;
-            const absentDays = Object.values(attendanceData).filter(data => data.status === 'absent').length;
+            const initialData = getInitialData();
+            let totalSchoolDays = initialData.totalSchoolDays;
+            let presentDays = initialData.presentDays;
+            let absentDays = 0;
+
+            for (const date in attendanceData) {
+                const dayData = attendanceData[date];
+                if (dayData.status === 'present') {
+                    presentDays++;
+                } else if (dayData.status === 'absent') {
+                    absentDays++;
+                }
+            }
+
+            totalSchoolDays += Object.keys(attendanceData).length;
             const requiredAttendance = getRequiredAttendance();
-            const additionalDaysNeeded = Math.max(0, Math.ceil((requiredAttendance / 100) * totalSchoolDays - presentDays));
+            const currentAttendance = presentDays / totalSchoolDays * 100;
+            const additionalDaysRequired = Math.ceil((requiredAttendance * totalSchoolDays / 100) - presentDays);
 
             statisticsContainer.innerHTML = `
-                <p>Required Attendance: ${requiredAttendance}%</p>
                 <p>Total School Days: ${totalSchoolDays}</p>
                 <p>Present Days: ${presentDays}</p>
                 <p>Absent Days: ${absentDays}</p>
-                <p>Additional Days Needed: ${additionalDaysNeeded}</p>
+                <p>Current Attendance: ${currentAttendance.toFixed(2)}%</p>
+                <p>Additional Days Needed: ${additionalDaysRequired > 0 ? additionalDaysRequired : 0}</p>
             `;
         };
 
@@ -90,49 +114,58 @@ document.addEventListener("DOMContentLoaded", function () {
     // Settings Page
     const settingsForm = document.getElementById('settings-form');
     if (settingsForm) {
-        const attendanceSlider = document.getElementById('required-attendance');
-        const attendanceValue = document.getElementById('required-attendance-value');
+        const requiredAttendanceSlider = document.getElementById('required-attendance');
+        const requiredAttendanceValue = document.getElementById('required-attendance-value');
 
-        attendanceSlider.value = getRequiredAttendance();
-        attendanceValue.textContent = `${attendanceSlider.value}%`;
+        requiredAttendanceSlider.value = getRequiredAttendance();
+        requiredAttendanceValue.textContent = `${requiredAttendanceSlider.value}%`;
 
-        attendanceSlider.addEventListener('input', function () {
-            attendanceValue.textContent = `${this.value}%`;
+        requiredAttendanceSlider.addEventListener('input', () => {
+            requiredAttendanceValue.textContent = `${requiredAttendanceSlider.value}%`;
         });
 
         settingsForm.addEventListener('submit', function (event) {
             event.preventDefault();
-            setRequiredAttendance(attendanceSlider.value);
+            setRequiredAttendance(requiredAttendanceSlider.value);
             alert('Settings saved successfully.');
         });
     }
 
     // Predictor Page
     const predictorForm = document.getElementById('predictor-form');
-    const predictorResult = document.getElementById('predictor-result');
     if (predictorForm) {
         predictorForm.addEventListener('submit', function (event) {
             event.preventDefault();
-            const daysAbsentNextWeek = parseInt(document.getElementById('days-absent-next-week').value, 10);
-
+            const daysAbsentNextWeek = parseInt(document.getElementById('days-absent-next-week').value);
             const attendanceData = getAttendanceData();
-            const totalSchoolDays = Object.keys(attendanceData).filter(date => {
-                const dayOfWeek = new Date(date).getDay();
-                return dayOfWeek >= 1 && dayOfWeek <= 5; // Monday to Friday
-            }).length;
-            const presentDays = Object.values(attendanceData).filter(data => data.status === 'present').length;
+            const initialData = getInitialData();
+            let totalSchoolDays = initialData.totalSchoolDays;
+            let presentDays = initialData.presentDays;
 
-            const newTotalSchoolDays = totalSchoolDays + 5; // Adding next week's days (assuming a full school week)
-            const newAbsentDays = Object.values(attendanceData).filter(data => data.status === 'absent').length + daysAbsentNextWeek;
-            const newPresentDays = presentDays;
-            const newAttendancePercentage = (newPresentDays / newTotalSchoolDays) * 100;
+            for (const date in attendanceData) {
+                const dayData = attendanceData[date];
+                if (dayData.status === 'present') {
+                    presentDays++;
+                }
+            }
 
-            predictorResult.innerHTML = `
-                <p>New Total School Days: ${newTotalSchoolDays}</p>
-                <p>New Present Days: ${newPresentDays}</p>
-                <p>New Absent Days: ${newAbsentDays}</p>
-                <p>New Attendance Percentage: ${newAttendancePercentage.toFixed(2)}%</p>
-            `;
+            totalSchoolDays += Object.keys(attendanceData).length + 5; // Assume 5 school days in the next week
+            const futureAttendance = (presentDays / (totalSchoolDays - daysAbsentNextWeek)) * 100;
+
+            document.getElementById('predictor-result').textContent = `Predicted Attendance: ${futureAttendance.toFixed(2)}%`;
+        });
+    }
+
+    // Initial Data Page
+    const initialDataForm = document.getElementById('initial-data-form');
+    if (initialDataForm) {
+        initialDataForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const initialSchoolDays = parseInt(document.getElementById('initial-school-days').value);
+            const initialPresentDays = parseInt(document.getElementById('initial-present-days').value);
+
+            setInitialData({ totalSchoolDays: initialSchoolDays, presentDays: initialPresentDays });
+            alert('Initial data saved successfully.');
         });
     }
 });
