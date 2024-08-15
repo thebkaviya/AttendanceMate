@@ -7,19 +7,106 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="login-container">
+        <h1>Login</h1>
+        <form id="login-form">
+            <label for="username">Username:</label>
+            <input type="text" id="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <div class="container" id="app-container" style="display:none;">
         <h1>Attendance Tracker</h1>
         <nav>
             <ul>
-                <li><a href="dataentry.html">Data Entry</a></li>
-                <li><a href="calenderview.html">Calendar View</a></li>
-                <li><a href="statistics.html">Statistics</a></li>
-                <li><a href="settings.html">Settings</a></li>
-                <li><a href="predictor.html">Predictor</a></li>
-                <li><a href="initialdata.html">Initial Data</a></li>
+                <li><a href="#data-entry">Data Entry</a></li>
+                <li><a href="#calendar">Calendar View</a></li>
+                <li><a href="#statistics">Statistics</a></li>
+                <li><a href="#settings">Settings</a></li>
+                <li><a href="#predictor">Predictor</a></li>
+                <li><button id="logout-button">Logout</button></li>
             </ul>
         </nav>
+
+        <!-- Data Entry Section -->
+        <section id="data-entry">
+            <h2>Data Entry</h2>
+            <form id="data-entry-form">
+                <label for="date">Date:</label>
+                <input type="date" id="date" required>
+                <label>Status:</label>
+                <select id="status">
+                    <option value="present">Present</option>
+                    <option value="absent">Absent</option>
+                    <option value="holiday">Holiday</option>
+                </select>
+                <label for="reason">Reason (if absent):</label>
+                <textarea id="reason"></textarea>
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+
+        <!-- Calendar View Section -->
+        <section id="calendar">
+            <h2>Calendar View</h2>
+            <div class="calendar" id="calendar-container"></div>
+        </section>
+
+        <!-- Statistics Section -->
+        <section id="statistics">
+            <h2>Statistics</h2>
+            <div id="statistics-container"></div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settings">
+            <h2>Settings</h2>
+            <form id="settings-form">
+                <label for="required-attendance">Required Attendance Percentage:</label>
+                <div class="slider-container">
+                    <input type="range" id="required-attendance" class="slider" min="0" max="100">
+                    <span id="required-attendance-value" class="slider-value">75%</span>
+                </div>
+                <button type="submit">Save Settings</button>
+            </form>
+        </section>
+
+        <!-- Predictor Section -->
+        <section id="predictor">
+            <h2>Predictor</h2>
+            <form id="predictor-form">
+                <label for="days-absent-next-week">Days Absent Next Week:</label>
+                <input type="number" id="days-absent-next-week" min="0" max="5" required>
+                <button type="submit">Calculate</button>
+            </form>
+            <p id="predictor-result">Predicted Attendance: N/A</p>
+        </section>
+
+        <!-- Initial Data Section -->
+        <section id="initial-data">
+            <h2>Set Initial Data</h2>
+            <form id="initial-data-form">
+                <label for="initial-school-days">Initial School Days:</label>
+                <input type="number" id="initial-school-days" min="0" required>
+                <label for="initial-present-days">Initial Present Days:</label>
+                <input type="number" id="initial-present-days" min="0" required>
+                <button type="submit">Save Initial Data</button>
+            </form>
+        </section>
+
+        <!-- Popup -->
+        <div id="popup" class="popup">
+            <h2>Attendance Details</h2>
+            <p id="popup-date"></p>
+            <p id="popup-status"></p>
+            <p id="popup-reason"></p>
+            <button id="popup-close">Close</button>
+        </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>

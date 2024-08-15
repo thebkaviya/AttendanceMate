@@ -1,81 +1,76 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
-    color: #333;
 }
 
 .container {
     max-width: 800px;
-    margin: 20px auto;
+    margin: 0 auto;
     padding: 20px;
-    background-color: white;
+    background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
-h1 {
+h1, h2 {
     text-align: center;
-    color: #4CAF50;
 }
 
 nav ul {
-    list-style: none;
-    padding: 0;
     display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
 }
 
 nav ul li {
-    display: inline;
+    margin: 0 10px;
 }
 
-nav ul li a {
+nav ul li a, nav ul li button {
     text-decoration: none;
-    color: #4CAF50;
-    font-weight: bold;
-    transition: color 0.3s;
+    color: #007bff;
+    cursor: pointer;
 }
 
-nav ul li a:hover {
-    color: #388E3C;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+nav ul li button {
+    background: none;
+    border: none;
+    font: inherit;
 }
 
 label {
-    font-weight: bold;
+    display: block;
+    margin-top: 10px;
 }
 
-input[type="date"],
-input[type="number"],
-textarea {
-    padding: 10px;
+input[type="text"], input[type="password"], input[type="date"], input[type="number"], textarea, select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
 button {
+    display: block;
+    width: 100%;
     padding: 10px;
-    background-color: #4CAF50;
-    color: white;
+    margin-top: 15px;
+    background-color: #007bff;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
+    color: #fff;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #0056b3;
 }
 
-/* Calendar */
 .calendar {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -83,100 +78,54 @@ button:hover {
 }
 
 .calendar-day {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     padding: 10px;
-    background-color: #e0e0e0;
-    border-radius: 5px;
+    border: 1px solid #ccc;
+    text-align: center;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
 .calendar-day[data-status="present"] {
-    background-color: #a5d6a7;
+    background-color: #c8e6c9;
 }
 
 .calendar-day[data-status="absent"] {
-    background-color: #ef9a9a;
+    background-color: #ffcdd2;
 }
 
-.calendar-day[data-status="unknown"] {
-    background-color: #eeeeee;
+.calendar-day[data-status="holiday"] {
+    background-color: #ffe0b2;
 }
 
-.calendar-day:hover {
-    background-color: #ccc;
-}
-
-/* Statistics Page */
-#statistics p {
-    font-size: 18px;
-    color: #333;
-}
-
-/* Popup */
-#popup {
+.popup {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: white;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: none;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    max-width: 90%;
-    width: 400px;
-    box-sizing: border-box;
-}
-
-#popup h2 {
-    margin: 0;
-    font-size: 24px;
-    color: #333;
-}
-
-#popup p {
-    font-size: 16px;
-    color: #555;
     text-align: center;
 }
 
-#popup-close {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+.popup h2 {
+    margin-top: 0;
 }
 
-#popup-close:hover {
-    background-color: #45a049;
-}
-
-/* Slider */
 .slider-container {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 10px;
-    margin-top: 20px;
 }
 
 .slider {
-    width: 100%;
-    max-width: 400px;
+    width: 70%;
+    margin-right: 10px;
 }
 
 .slider-value {
-    font-size: 20px;
     font-weight: bold;
-    text-align: center;
 }
